@@ -17,7 +17,6 @@ typedef struct Car {
     double totalTime; //Temps total de la course de cette voiture
 } Car;
 //API CAR
-extern void assign_car(Car *voiture);
 
 extern void change_id(int new_id, Car *voiture);
 

@@ -17,51 +17,50 @@ int main() {
 
     }
 
-
     sleep(1);
-    simulation(20, 5400, tri);
-    export_txt(7, 20, tri);
+    simulation(20, 5400, tri,0);
+    export_txt(1, 20, tri);
     sleep(2);
     system("clear");
-    /*//Essai 2
+    //Essai 2
 //printf("\t\nEssai2");
     sleep(1);
-    simulation(20, 5400, tri);
+    simulation(20, 5400, tri,0);
     export_txt(2, 20, tri);
     sleep(2);
     system("clear");
     //Essai 3
-//printf("\t\nEssai2");
+//printf("\t\nEssai3");
     sleep(1);
-    simulation(20, 3600, tri);
+    simulation(20, 3600, tri,0);
     export_txt(3, 20, tri);
     sleep(2);
     system("clear");
     //Qualif 1 toutes les voitures
 
     sleep(1);
-    simulation(20, 1080, tri);
+    simulation(20, 1080, tri,0);
     export_txt(4, 20, tri);
     sleep(2);
     system("clear");
     //Qualif 2 les 15 premières voitures
 
     sleep(1);
-    simulation(15, 900, tri);
+    simulation(15, 900, tri,0);
     export_txt(5, 15, tri);
     sleep(2);
     system("clear");
     //Qualif 3 les 10 premières voitures
 
     sleep(1);
-    simulation(10, 720, tri);
+    simulation(10, 720, tri,0);
     export_txt(6, 10, tri);
     sleep(2);
     system("clear");
     //Course
     sleep(1);
-    simulation(20, lap_time*total_lap, tri);
+    simulation(20, lap_time*total_lap, tri,1);
     export_txt(7, 20, tri);
     sleep(2);
-    system("clear");*/
+    system("clear");
 }

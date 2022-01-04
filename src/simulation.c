@@ -114,10 +114,50 @@ void sort(Car drivers[NUMBER_OF_PILOTES], Car *circuit, int race_car_number,stru
         }
     }
 }
+void sort_by_total(Car drivers[NUMBER_OF_PILOTES], Car *circuit, int race_car_number,struct sembuf operation,int new_sem_id,int nbr_reader){
 
+    Car temp; //Structure temporaire pour stocker les voitures en cours de tri
 
-void affichage(Car drivers[NUMBER_OF_PILOTES], int race_car_number, Car * circuit,struct sembuf op,int new_sem_id, int nbr_reader) {
-    sort(drivers, circuit, race_car_number, op, new_sem_id, nbr_reader);
+    begin_reading(new_sem_id, operation,nbr_reader); //Section critique début
+
+    memcpy(drivers, circuit, race_car_number * sizeof(struct Car));
+
+    stop_reading(new_sem_id, operation,nbr_reader); //Section critique fin
+
+    int i, j, k;
+
+    for (i = race_car_number / 2; i > 0; i = i / 2){ //On divise la liste des pilotes en 2
+
+        for (j = i; j < race_car_number; j++){
+
+            for(k = j - i; k >= 0; k = k - i){
+
+                if (drivers[k+i].totalTime >= drivers[k].totalTime)
+
+                    break;
+
+                else{
+
+                    temp = drivers[k];
+
+                    drivers[k] = drivers[k+i];
+
+                    drivers[k+i] = temp;
+
+                }
+            }
+        }
+    }
+}
+
+void affichage(Car drivers[NUMBER_OF_PILOTES], int race_car_number, Car * circuit,struct sembuf op,int new_sem_id, int nbr_reader,int t_sort) {
+    if(t_sort){
+        sort_by_total(drivers, circuit, race_car_number, op, new_sem_id, nbr_reader);
+    }
+    else{
+        sort(drivers, circuit, race_car_number, op, new_sem_id, nbr_reader);
+    }
+
 
     double bestS1 = 99.0;
 
@@ -176,7 +216,7 @@ void affichage(Car drivers[NUMBER_OF_PILOTES], int race_car_number, Car * circui
 
         bestS3 = (bestS3 > pilote->S3 && pilote->S3 != 0) ? pilote->S3 : bestS3;
 
-        bestLap = (bestLap > pilote->bestLap && pilote->bestLap > 99.00) ? pilote->bestLap : bestLap;
+
 
     }
 
@@ -193,7 +233,7 @@ void affichage(Car drivers[NUMBER_OF_PILOTES], int race_car_number, Car * circui
 
 }
 
-void simulation(int race_car_number, double race_time, Car drivers[NUMBER_OF_PILOTES]) {
+void simulation(int race_car_number, double race_time, Car drivers[NUMBER_OF_PILOTES],int t_sort) {
     int sem_id;
     int shm_id;
     int reader_num = 1;
@@ -217,7 +257,6 @@ void simulation(int race_car_number, double race_time, Car drivers[NUMBER_OF_PIL
 
     for (int i = 0; i < race_car_number; i++) {
         if (fork() == 0) {
-            printf("creation d'un fils");
             circuit = shmat(shm_id, NULL, 0);
             if (circuit == (Car *) -1) {
                 perror("Erreur shmat = -1 lors du fils");
@@ -287,7 +326,7 @@ void simulation(int race_car_number, double race_time, Car drivers[NUMBER_OF_PIL
     }
     // Raffraichissement de l'affichage
     for (int compteur = 0; compteur < ((int) race_time / 130 * 3); compteur++) {
-        affichage(drivers, race_car_number,circuit,operation,sem_id, reader_num);
+        affichage(drivers, race_car_number,circuit,operation,sem_id, reader_num,t_sort);
         usleep(500000);
     }
     if (shmdt(circuit) == -1) {

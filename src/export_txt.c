@@ -90,7 +90,12 @@ int export_txt(int step, int nbr_voiture, Car drivers[NUMBER_OF_PILOTES]) {
 
         }//Fin ecriture
         if (step == 7){
-            fprintf(fichier,"Best lap is %.3f \n", drivers[0].bestLap);
+            double bestLap = 999;
+            for(int i = 0; i < NUMBER_OF_PILOTES; i++){
+                Car * pilote = drivers + i;
+                bestLap = (bestLap > pilote->bestLap && pilote->bestLap > 99.00) ? pilote->bestLap : bestLap;
+            }
+            fprintf(fichier,"Best lap is %.3f \n", bestLap);
         }
         fclose(fichier);
 
