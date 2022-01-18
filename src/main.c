@@ -13,7 +13,6 @@ int main() {
     for(int i = 0; i < 20; i++){
         Car *tri_ptr = tri + i;
         change_id(ids[i],tri_ptr);
-        printf("Ici id n° %d \n",tri_ptr->ID);
 
     }
 

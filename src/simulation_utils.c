@@ -27,7 +27,7 @@ double sector(){
     return ((double) ramdom(min_time,max_time) / (double) 1000);
 }
 int pit(){
-    if (ramdom(0, 20) == 1){
+    if (ramdom(0, 15) == 1){
         return 1;
     }
     else{

@@ -214,9 +214,9 @@ void affichage(Car drivers[NUMBER_OF_PILOTES], int race_car_number, Car * circui
 
         bestS2 = (bestS2 > pilote->S2 && pilote->S2 != 0) ? pilote->S2 : bestS2;
 
-        bestS3 = (bestS3 > pilote->S3 && pilote->S3 != 0) ? pilote->S3 : bestS3;
+        bestS3 = (bestS3 > pilote->S3 && pilote->S3 != 0) ? pilote->S3 : bestS3 ;
 
-
+        bestLap = (bestLap > pilote->bestLap && pilote->bestLap > 99.00) ? pilote->bestLap : bestLap;
 
     }
 
@@ -252,7 +252,6 @@ void simulation(int race_car_number, double race_time, Car drivers[NUMBER_OF_PIL
         exit(1);
     }
     sem_id = (int) start_sem();
-    printf("Sem started \n");
     //Faire tourner les voitures
 
     for (int i = 0; i < race_car_number; i++) {
@@ -294,7 +293,7 @@ void simulation(int race_car_number, double race_time, Car drivers[NUMBER_OF_PIL
                     post(1, sem_id, operation);
 
                     //Calcul pit
-                    if (pit() == 1) {
+                    if (pit() == 1 && pilote->isPit < 5) {
                         is_pit((pilote)->isPit + 1, pilote);
                         usleep(50000);
                         wait(1, sem_id, operation);
@@ -328,6 +327,7 @@ void simulation(int race_car_number, double race_time, Car drivers[NUMBER_OF_PIL
     for (int compteur = 0; compteur < ((int) race_time / 130 * 3); compteur++) {
         affichage(drivers, race_car_number,circuit,operation,sem_id, reader_num,t_sort);
         usleep(500000);
+        //system("clear");
     }
     if (shmdt(circuit) == -1) {
         perror("Erreur shmdt dans libération de la mémoire");
